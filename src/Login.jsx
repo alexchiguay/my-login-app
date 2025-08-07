@@ -1,11 +1,13 @@
+// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import ErrorModal from './ErrorModal'; // Modal genérico
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -15,7 +17,7 @@ export default function Login() {
     if (success) {
       navigate('/dashboard');
     } else {
-      setError('Credenciales inválidas');
+      setShowModal(true);
     }
   }
 
@@ -42,8 +44,16 @@ export default function Login() {
         <button type="submit" style={{ width: '100%', padding: 8 }}>
           Ingresar
         </button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
+
+      {/* Modal de error */}
+      {showModal && (
+        <ErrorModal
+          title="Error de autenticación"
+          message="Credenciales inválidas"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }
